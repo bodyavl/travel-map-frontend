@@ -27,7 +27,7 @@ const Mapbox = () => {
   const [markers, setMarkers] = useState<Array<MapMarker>>()
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(1);
 
   
   async function fetchMarkers() {
@@ -61,6 +61,7 @@ const Mapbox = () => {
       description,
       rating
     }
+    console.log(data);
     let res = await fetch(`${API_URL}/mark/add`,
         { method: 'post',
           body: JSON.stringify(data),
@@ -69,6 +70,9 @@ const Mapbox = () => {
           }
         });
     setNewPosition(null);
+    setTitle("");
+    setDescription("");
+    setRating(0);
     await fetchMarkers();
     
   }
@@ -101,22 +105,21 @@ const Mapbox = () => {
       {newPosition && 
         (<><Marker longitude={newPosition.lng} latitude={newPosition.lat}></Marker>
             <Popup longitude={newPosition.lng} latitude={newPosition.lat} onClose={() => setNewPosition(null)} offset={[7, 0]} closeOnClick={false} anchor='left'>
-            <form onSubmit={handleSubmit}>
-              <label htmlFor="title">Title</label>
-              <input type="text" id='title' name='title' onChange={e => setTitle(e.target.value)}/>
-              <label htmlFor="descr">Description</label>
-              <textarea name="description" id="descr" cols={20} rows={5} onChange={e => setDescription(e.target.value)}></textarea><br />
-              <label htmlFor="rating" >Rating</label>
-              <select name="rating" id="rating" onChange={e => setRating(parseInt(e.target.value))}>
-                <option value={1}>1</option>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
-                <option value={4}>4</option>
-                <option value={5}>5</option>
-              </select> <br />
-              <button>Add marker</button>
-            </form>
-            
+              <form onSubmit={handleSubmit}>
+                <label htmlFor="title">Title</label>
+                <input type="text" id='title' name='title'onChange={e => setTitle(e.target.value)} required/>
+                <label htmlFor="descr">Description</label>
+                <textarea name="description" id="descr" cols={20} rows={5} onChange={e => setDescription(e.target.value)} required></textarea><br />
+                <label htmlFor="rating" >Rating</label>
+                <select name="rating" id="rating" onChange={e => setRating(parseInt(e.target.value))}>
+                  <option value={1}>1</option>
+                  <option value={2}>2</option>
+                  <option value={3}>3</option>
+                  <option value={4}>4</option>
+                  <option value={5}>5</option>
+                </select> <br />
+                <button>Add marker</button>
+              </form>
             </Popup>
       </>)}
       </Map>
