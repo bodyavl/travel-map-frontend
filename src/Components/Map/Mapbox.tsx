@@ -51,13 +51,13 @@ const Mapbox = () => {
   function handleMarkerClick(e: MapboxEvent<MouseEvent>, id: string, longitude: number, latitude: number) {
     e.originalEvent.stopPropagation();
     setCurrentPositionId(id);
-    mapRef.current?.flyTo({center: [longitude, latitude], duration: 1500});
+    mapRef.current?.flyTo({center: [longitude, latitude], duration: 1000});
   }
 
   function handleMapDbClick(e: MapMouseEvent) {
     const position = {...e.lngLat};
     setNewPosition(position)
-    mapRef.current?.flyTo({center: [position.lng, position.lat], duration: 1500});
+    mapRef.current?.flyTo({center: [position.lng, position.lat], duration: 1000});
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
