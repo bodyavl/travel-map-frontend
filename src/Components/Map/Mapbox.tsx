@@ -1,5 +1,5 @@
 import mapboxgl, { MapMouseEvent } from 'mapbox-gl'
-import Map, { MapRef, Marker, Popup } from 'react-map-gl'
+import Map, { MapRef, Marker, Popup, MapboxEvent } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useState, useEffect, FormEvent, useRef, useCallback } from 'react';
 import s from './Mapbox.module.scss'
@@ -25,7 +25,7 @@ const Mapbox = () => {
     zoom: 7
   });
   const mapRef = useRef<MapRef>(null);
-
+  const [cursor, setCursor] = useState<string>();
   const [currentPositonId, setCurrentPositionId] = useState<string | null>(null);
   const [newPosition, setNewPosition] = useState<Position | null>(null);
   const [markers, setMarkers] = useState<Array<MapMarker>>()
@@ -48,7 +48,8 @@ const Mapbox = () => {
     fetchMarkers();
   }, []);
 
-  function handleMarkerClick(id: string, longitude: number, latitude: number) {
+  function handleMarkerClick(e: MapboxEvent<MouseEvent>, id: string, longitude: number, latitude: number) {
+    e.originalEvent.stopPropagation();
     setCurrentPositionId(id);
     mapRef.current?.flyTo({center: [longitude, latitude], duration: 1500});
   }
@@ -95,11 +96,12 @@ const Mapbox = () => {
         onClick={() => setNewPosition(null) }
         doubleClickZoom={false}
         mapStyle="mapbox://styles/mapbox/streets-v12"
+        
         >
         {markers?.map((marker, index) => 
-          (<div key={index}>
-            <Marker longitude={marker.longitude} onClick={() => handleMarkerClick(marker._id, marker.longitude, marker.latitude)} latitude={marker.latitude}></Marker>
-                  {marker._id === currentPositonId && (<Popup latitude={marker.latitude} onClose={() => setCurrentPositionId(null)} closeOnClick={false} longitude={marker.longitude} anchor='top'>
+          (<div>
+            <Marker longitude={marker.longitude} style={{cursor: 'pointer'}} onClick={(e) => handleMarkerClick(e, marker._id, marker.longitude, marker.latitude)} latitude={marker.latitude} ></Marker>
+                  {marker._id === currentPositonId && (<Popup latitude={marker.latitude} onClose={() => setCurrentPositionId(null)} longitude={marker.longitude} anchor='top'>
                     <h1>{marker.title}</h1>
                     <p>{marker.description}</p>
                     {Array(5).fill('').map((_, i) => {
@@ -112,7 +114,7 @@ const Mapbox = () => {
         )}
       {newPosition && 
         (<><Marker longitude={newPosition.lng} latitude={newPosition.lat}></Marker>
-            <Popup longitude={newPosition.lng} latitude={newPosition.lat} onClose={() => setNewPosition(null)} closeOnClick={false} anchor='top'>
+            <Popup longitude={newPosition.lng} latitude={newPosition.lat} onClose={() => setNewPosition(null)} anchor='top'>
               <form onSubmit={handleSubmit}>
                 <label htmlFor="title" className={s.formLabel}>Title</label>
                 <input type="text" id='title' className={s.formTextInput} name='title'onChange={e => setTitle(e.target.value)} required/>
