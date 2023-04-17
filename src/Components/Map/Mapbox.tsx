@@ -99,7 +99,7 @@ const Mapbox = () => {
         {markers?.map((marker, index) => 
           (<div key={index}>
             <Marker longitude={marker.longitude} onClick={() => handleMarkerClick(marker._id, marker.longitude, marker.latitude)} latitude={marker.latitude}></Marker>
-                  {marker._id === currentPositonId && (<Popup latitude={marker.latitude} onClose={() => setCurrentPositionId(null)} offset={[7, 0]} closeOnClick={false} longitude={marker.longitude} anchor='left'>
+                  {marker._id === currentPositonId && (<Popup latitude={marker.latitude} onClose={() => setCurrentPositionId(null)} closeOnClick={false} longitude={marker.longitude} anchor='top'>
                     <h1>{marker.title}</h1>
                     <p>{marker.description}</p>
                     {Array(5).fill('').map((_, i) => {
@@ -112,7 +112,7 @@ const Mapbox = () => {
         )}
       {newPosition && 
         (<><Marker longitude={newPosition.lng} latitude={newPosition.lat}></Marker>
-            <Popup longitude={newPosition.lng} latitude={newPosition.lat} onClose={() => setNewPosition(null)} offset={[7, 0]} closeOnClick={false} anchor='left'>
+            <Popup longitude={newPosition.lng} latitude={newPosition.lat} onClose={() => setNewPosition(null)} closeOnClick={false} anchor='top'>
               <form onSubmit={handleSubmit}>
                 <label htmlFor="title" className={s.formLabel}>Title</label>
                 <input type="text" id='title' className={s.formTextInput} name='title'onChange={e => setTitle(e.target.value)} required/>
