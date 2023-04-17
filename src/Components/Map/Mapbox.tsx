@@ -24,7 +24,7 @@ const Mapbox = () => {
     latitude: 50.45,
     zoom: 7
   });
-  const mapRef = useRef<MapRef>();
+  const mapRef = useRef<MapRef>(null);
 
   const [currentPositonId, setCurrentPositionId] = useState<string | null>(null);
   const [newPosition, setNewPosition] = useState<Position | null>(null);
@@ -92,6 +92,7 @@ const Mapbox = () => {
         {...viewState}
         onMove={evt => setViewState(evt.viewState)}
         onDblClick={handleMapDbClick}
+        onClick={() => setNewPosition(null) }
         doubleClickZoom={false}
         mapStyle="mapbox://styles/mapbox/streets-v12"
         >
