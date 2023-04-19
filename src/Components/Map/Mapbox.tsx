@@ -25,7 +25,6 @@ const Mapbox = () => {
     zoom: 7
   });
   const mapRef = useRef<MapRef>(null);
-  const [cursor, setCursor] = useState<string>();
   const [currentPositonId, setCurrentPositionId] = useState<string | null>(null);
   const [newPosition, setNewPosition] = useState<Position | null>(null);
   const [markers, setMarkers] = useState<Array<MapMarker>>()
@@ -69,7 +68,6 @@ const Mapbox = () => {
       description,
       rating
     }
-    console.log(data);
     let res = await fetch(`${API_URL}/mark/add`,
         { method: 'post',
           body: JSON.stringify(data),
@@ -88,6 +86,7 @@ const Mapbox = () => {
   
   return (
     <div className={s.map_container}>
+      
       <Map ref={mapRef}
         mapboxAccessToken={import.meta.env.VITE_MAPBOXTOKEN}
         {...viewState}
@@ -119,7 +118,7 @@ const Mapbox = () => {
                 <label htmlFor="title" className={s.formLabel}>Title</label>
                 <input type="text" id='title' className={s.formTextInput} name='title'onChange={e => setTitle(e.target.value)} required/>
                 <label htmlFor="descr" className={s.formLabel}>Description</label>
-                <textarea name="description" id="descr" className={s.formTextarea} cols={20} rows={5} onChange={e => setDescription(e.target.value)} required></textarea><br />
+                <textarea name="description" id="descr" className={s.formTextarea} cols={20} rows={5} onChange={e => setDescription(e.target.value)} required></textarea>
                 <label htmlFor="rating" className={s.formLabel}>Rating</label>
                 <select name="rating" id="rating" className={s.formSelect} onChange={e => setRating(parseInt(e.target.value))}>
                   <option value={1}>1</option>
@@ -133,6 +132,10 @@ const Mapbox = () => {
             </Popup>
       </>)}
       </Map>
+      <div className={s.navbar}>
+        <button className={s.loginButton}>Login</button>
+        <button className={s.signupButton}>Sign up</button>
+      </div>
     </div>
   )
 }
