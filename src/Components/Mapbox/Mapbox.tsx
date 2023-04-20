@@ -93,6 +93,22 @@ const Mapbox = ({apiUrl}: Props) => {
     
   }
   
+  async function handleLogout() {
+    setIsLoading(true)
+    let res = await fetch(`${apiUrl}/user/logout`,
+        { method: 'delete',
+          body: JSON.stringify({refreshToken: localStorage.refreshToken}),
+          headers : { 
+          'Content-Type': 'application/json'
+          }
+        });
+    
+    localStorage.removeItem('username')
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    setIsLoading(false);
+  }
+
   return (
     <div className={s.map_container}>
       
@@ -147,8 +163,12 @@ const Mapbox = ({apiUrl}: Props) => {
         </>)}
         </Map>
         <div className={s.navbar}>
-          <Link className={s.loginButton} to={'/login'}>Login</Link>
-          <Link className={s.signupButton} to={'/signup'}>Sign up</Link>
+          {localStorage.username ? 
+            (<button className={s.loginButton} onClick={handleLogout}>Log out</button>) :
+            (<>
+              <Link className={s.loginButton} to={'/login'}>Log in</Link>
+              <Link className={s.signupButton} to={'/signup'}>Sign up</Link>
+            </>)}
         </div>
       </>)}
     </div>
