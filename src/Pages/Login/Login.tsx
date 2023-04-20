@@ -1,16 +1,33 @@
+import { accessToken } from 'mapbox-gl';
 import s from './Login.module.scss'
 import { FormEvent, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+interface Props {
+    apiUrl: string
+}
 
-
-
-const Login = () => {
+const Login = ({apiUrl}: Props) => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+        setIsLoading(true);
         e.preventDefault();
-        
+        let res = await fetch(`${apiUrl}/user/login`,
+            { method: 'post',
+            body: JSON.stringify({email, password}),
+            headers : { 
+            'Content-Type': 'application/json'
+            }
+        });
+        let result = await res.json();
+        localStorage.setItem('accessToken', result.accessToken)
+        localStorage.setItem('username', result.username);
+        localStorage.setItem('refreshToken', result.refreshToken)
+        setIsLoading(false);
+        navigate('/');
     }
 
 
@@ -18,10 +35,10 @@ const Login = () => {
         <>
             <form onSubmit={handleSubmit} className={s.formContainer}>
                 <label htmlFor="email" className={s.formLabel}>Email</label>
-                <input type="text" id='email' className={s.formTextInput} name='email' onChange={e => setEmail(e.target.value)} required/>
+                <input type="text" id='email' className={s.formTextInput} name='email' onChange={e => setEmail(e.target.value)} disabled={isLoading} required/>
                 <label htmlFor="password" className={s.formLabel}>Password</label>
-                <input type="password" id='password' className={s.formTextInput} name='password' onChange={e => setPassword(e.target.value)} required/>
-                <button className={s.formButton}>Login</button>
+                <input type="password" id='password' className={s.formTextInput} name='password' onChange={e => setPassword(e.target.value)} disabled={isLoading} required/>
+                <button className={s.formButton} disabled={isLoading}>Login</button>
             </form>
         </>
   )

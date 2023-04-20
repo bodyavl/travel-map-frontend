@@ -1,8 +1,10 @@
 import Mapbox from "../../Components/Mapbox/Mapbox"
-
-const Map = () => {
+interface Props {
+  apiUrl: string
+}
+const Map = ({apiUrl}: Props) => {
   return (
-    <Mapbox/>
+    <Mapbox apiUrl={apiUrl}/>
   )
 }
 

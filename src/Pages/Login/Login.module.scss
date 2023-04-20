@@ -4,24 +4,37 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 5px;
-
+    gap: 0.5em;
     & .formLabel {
         margin: 0;
+        font-size: 1.2em;
+
     }
     & .formTextInput {
         margin: 0;
-        font-size: 1em;
+        font-size: 1.2em;
         border-radius: 0.7em;
-        padding: 0.5em;
-        border-color: grey;
+        padding: 0.3em 0.5em;
+        border: 1px solid rgb(123, 123, 123);
+        background-image:none;
+        background-color:transparent;
+        box-shadow: none;
+        outline: none;
+    }
+    & .formTextInput:focus {
+        outline: none;
     }
     & .formButton {
         font-family: 'Inter', sans-serif;
-        border-radius: 7px;
+        border-radius: 12px;
+        font-size: 1.2em;
+        margin-top: 10px;
         padding: 0.5em 2em;
         border: none;
         background-color: rgb(230, 144, 82);
         color: white;
+    }
+    & .formButton:disabled {
+        opacity: 0.6;
     }
 }
