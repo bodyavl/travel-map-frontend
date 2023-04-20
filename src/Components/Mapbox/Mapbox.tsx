@@ -5,7 +5,7 @@ import { useState, useEffect, FormEvent, useRef } from 'react';
 import s from './Mapbox.module.scss'
 import {AiFillStar} from 'react-icons/ai'
 import { Link } from 'react-router-dom';
-
+import { RotatingLines } from 'react-loader-spinner';
 interface MapMarker {
   latitude: number,
   longitude: number,
@@ -98,7 +98,7 @@ const Mapbox = ({apiUrl}: Props) => {
       
       {isLoading ? 
         <div className={s.loaderContainer}>
-          <div className="spinner"></div>
+          <RotatingLines strokeColor='black'/>
         </div>
       : (<>
         <Map ref={mapRef}
