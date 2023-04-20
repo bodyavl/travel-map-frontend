@@ -15,13 +15,19 @@ const Login = ({apiUrl}: Props) => {
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         setIsLoading(true);
         e.preventDefault();
+        const body = JSON.stringify({ email, password })
         let res = await fetch(`${apiUrl}/user/login`,
             { method: 'post',
-            body: JSON.stringify({email, password}),
+            body,
             headers : { 
             'Content-Type': 'application/json'
             }
         });
+        if(res.status === 500) {
+            alert("Wrong email or password")
+            setIsLoading(false);
+            return;
+        }
         let result = await res.json();
         localStorage.setItem('accessToken', result.accessToken)
         localStorage.setItem('username', result.username);
