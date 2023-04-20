@@ -1,9 +1,11 @@
 import mapboxgl, { MapMouseEvent } from 'mapbox-gl'
 import Map, { MapRef, Marker, Popup, MapboxEvent } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useState, useEffect, FormEvent, useRef, useCallback } from 'react';
+import { useState, useEffect, FormEvent, useRef } from 'react';
 import s from './Mapbox.module.scss'
 import {AiFillStar} from 'react-icons/ai'
+import { Link } from 'react-router-dom';
+
 interface MapMarker {
   latitude: number,
   longitude: number,
@@ -83,7 +85,6 @@ const Mapbox = () => {
     
   }
   
-  
   return (
     <div className={s.map_container}>
       
@@ -133,8 +134,8 @@ const Mapbox = () => {
       </>)}
       </Map>
       <div className={s.navbar}>
-        <button className={s.loginButton}>Login</button>
-        <button className={s.signupButton}>Sign up</button>
+        <Link className={s.loginButton} to={'/login'}>Login</Link>
+        <Link className={s.signupButton} to={'/signup'}>Sign up</Link>
       </div>
     </div>
   )

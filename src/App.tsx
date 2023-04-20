@@ -1,8 +1,8 @@
-import Mapbox from "./Components/Map/Mapbox"
+import Router from "./Components/Router/Router";
 
 function App() {
   return (
-    <Mapbox />
+    <Router />
   )
 }
 

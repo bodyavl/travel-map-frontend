@@ -1,0 +1,27 @@
+.formContainer {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    & .formLabel {
+        margin: 0;
+    }
+    & .formTextInput {
+        margin: 0;
+        font-size: 1em;
+        border-radius: 0.7em;
+        padding: 0.5em;
+        border-color: grey;
+    }
+    & .formButton {
+        font-family: 'Inter', sans-serif;
+        border-radius: 7px;
+        padding: 0.5em 2em;
+        border: none;
+        background-color: rgb(230, 144, 82);
+        color: white;
+    }
+}
