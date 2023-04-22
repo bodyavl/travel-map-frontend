@@ -68,6 +68,10 @@ const Mapbox = ({apiUrl}: Props) => {
   }
 
   function handleMapDbClick(e: MapMouseEvent) {
+    if(!localStorage.username) {
+      alert("Log in to add new markers!")
+      return
+    }
     const position = {...e.lngLat};
     setNewPosition(position)
     mapRef.current?.flyTo({center: [position.lng, position.lat], duration: 1000});
