@@ -1,4 +1,4 @@
-import s from './SigUp.module.scss'
+import s from './SignUp.module.scss'
 import {useState, FormEvent} from 'react'
 import { useNavigate } from 'react-router-dom'
 

@@ -23,7 +23,12 @@ const Login = ({apiUrl}: Props) => {
             }
         });
         if(res.status === 500) {
-            alert("Wrong email or password")
+            alert("User with this email doesn't exist!")
+            setIsLoading(false);
+            return;
+        }
+        else if(res.status === 403) {
+            alert("Wrong password!")
             setIsLoading(false);
             return;
         }

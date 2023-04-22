@@ -34,4 +34,7 @@
         background-color: rgb(230, 144, 82);
         color: white;
     }
+    & .formButton:disabled {
+        opacity: 0.6;
+    }
 }
