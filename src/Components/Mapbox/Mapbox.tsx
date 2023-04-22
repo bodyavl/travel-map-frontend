@@ -1,4 +1,4 @@
-import mapboxgl, { MapMouseEvent } from 'mapbox-gl'
+import { MapMouseEvent } from 'mapbox-gl'
 import Map, { MapRef, Marker, Popup, MapboxEvent } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useState, useEffect, FormEvent, useRef } from 'react';
@@ -6,12 +6,15 @@ import s from './Mapbox.module.scss'
 import {AiFillStar} from 'react-icons/ai'
 import { Link } from 'react-router-dom';
 import { RotatingLines } from 'react-loader-spinner';
+import { format } from 'timeago.js';
 interface MapMarker {
   latitude: number,
   longitude: number,
   rating: number,
   title: string,
   description: string,
+  username: string,
+  date: number,
   _id: string
 }
 interface Position {
@@ -49,6 +52,7 @@ const Mapbox = ({apiUrl}: Props) => {
         'Accept': 'application/json'
     }})
     let result:Array<MapMarker> = await res.json();
+
     setMarkers(result);
     setIsLoading(false);
   }
@@ -76,7 +80,8 @@ const Mapbox = ({apiUrl}: Props) => {
       longitude: newPosition?.lng,
       title,
       description,
-      rating
+      rating,
+      username: localStorage.username
     }
     let res = await fetch(`${apiUrl}/mark/add`,
         { method: 'post',
@@ -114,7 +119,7 @@ const Mapbox = ({apiUrl}: Props) => {
       
       {isLoading ? 
         <div className={s.loaderContainer}>
-          <RotatingLines strokeColor='black'/>
+          <RotatingLines strokeColor='black' width='50'/>
         </div>
       : (<>
         <Map ref={mapRef}
@@ -129,7 +134,7 @@ const Mapbox = ({apiUrl}: Props) => {
           >
           {markers?.map((marker, index) => 
             (<div key={index}>
-              <Marker longitude={marker.longitude} style={{cursor: 'pointer'}} onClick={(e) => handleMarkerClick(e, marker._id, marker.longitude, marker.latitude)} latitude={marker.latitude} ></Marker>
+              <Marker longitude={marker.longitude} style={{cursor: 'pointer'}} color={localStorage.username && marker.username === localStorage.username ? 'orange' : ''} onClick={(e) => handleMarkerClick(e, marker._id, marker.longitude, marker.latitude)} latitude={marker.latitude} ></Marker>
                     {marker._id === currentPositonId && (<Popup latitude={marker.latitude} onClose={() => setCurrentPositionId(null)} longitude={marker.longitude} anchor='top'>
                       <h1>{marker.title}</h1>
                       <p>{marker.description}</p>
@@ -137,12 +142,12 @@ const Mapbox = ({apiUrl}: Props) => {
                         const ratingValue = i + 1
                         return (<AiFillStar color={ratingValue <= marker.rating ? "#ffc107" : "#e4e5e9"} size={25}/>)
                         })}
-
+                      {marker.username && (<p>Created by <b>{marker.username}</b><br />{format(marker.date)}</p>)}
                     </Popup>)}
               </div>)
           )}
-        {newPosition && 
-          (<><Marker longitude={newPosition.lng} latitude={newPosition.lat}></Marker>
+        {localStorage.username && newPosition && 
+          (<><Marker longitude={newPosition.lng} latitude={newPosition.lat} color='orange'></Marker>
               <Popup longitude={newPosition.lng} latitude={newPosition.lat} onClose={() => setNewPosition(null)} anchor='top'>
                 <form onSubmit={handleSubmit}>
                   <label htmlFor="title" className={s.formLabel}>Title</label>

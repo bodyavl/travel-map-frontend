@@ -1,4 +1,3 @@
-import { accessToken } from 'mapbox-gl';
 import s from './Login.module.scss'
 import { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
@@ -41,7 +40,7 @@ const Login = ({apiUrl}: Props) => {
         <>
             <form onSubmit={handleSubmit} className={s.formContainer}>
                 <label htmlFor="email" className={s.formLabel}>Email</label>
-                <input type="text" id='email' className={s.formTextInput} name='email' onChange={e => setEmail(e.target.value)} disabled={isLoading} required/>
+                <input type="email" id='email' className={s.formTextInput} name='email' onChange={e => setEmail(e.target.value)} disabled={isLoading} required/>
                 <label htmlFor="password" className={s.formLabel}>Password</label>
                 <input type="password" id='password' className={s.formTextInput} name='password' onChange={e => setPassword(e.target.value)} disabled={isLoading} required/>
                 <button className={s.formButton} disabled={isLoading}>Login</button>

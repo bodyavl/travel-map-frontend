@@ -24,6 +24,11 @@ const SignUp = ({apiUrl}: Props) => {
             'Content-Type': 'application/json'
             }
         });
+        if(res.status === 400) {
+            alert("User with this username already exists!")
+            setIsLoading(false);
+            return;
+        }
         let result = await res.json();
         localStorage.setItem('accessToken', result.accessToken)
         localStorage.setItem('username', result.username);
@@ -37,7 +42,7 @@ const SignUp = ({apiUrl}: Props) => {
         <>
             <form onSubmit={handleSubmit} className={s.formContainer}>
                 <label htmlFor="email" className={s.formLabel}>Email</label>
-                <input type="text" id='email' className={s.formTextInput} name='email' onChange={e => setEmail(e.target.value)} disabled={isLoading} required/>
+                <input type="email" id='email' className={s.formTextInput} name='email' onChange={e => setEmail(e.target.value)} disabled={isLoading} required/>
                 <label htmlFor="username" className={s.formLabel}>Username</label>
                 <input type="text" id='username' className={s.formTextInput} name='username' onChange={e => setUsername(e.target.value)} disabled={isLoading} required/>
                 <label htmlFor="password" className={s.formLabel}>Password</label>
