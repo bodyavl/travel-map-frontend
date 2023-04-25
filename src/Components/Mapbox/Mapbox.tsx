@@ -87,13 +87,25 @@ const Mapbox = ({apiUrl}: Props) => {
       rating,
       username: localStorage.username
     }
-    let res = await fetch(`${apiUrl}/mark/add`,
-        { method: 'post',
-          body: JSON.stringify(data),
-          headers : { 
-          'Content-Type': 'application/json'
-          }
-        });
+    let res = await addMarker(data);
+    if (res.status === 403) {
+      let resCheckToken = await fetch(`${apiUrl}/user/token`,
+      { method: 'post',
+        body: JSON.stringify({token: localStorage.refreshToken}),
+        headers : { 
+          'Content-Type': 'application/json',
+        }
+      });
+      if (resCheckToken.status === 200) {
+        let result = await resCheckToken.json();
+        localStorage.accessToken = result.accessToken;
+        localStorage.refreshToken = result.refreshToken;
+        res = await addMarker(data);
+      }
+      else{
+        alert('Log in to add new markers')
+      }
+    }
     setNewPosition(null);
     setTitle("");
     setDescription("");
@@ -102,6 +114,18 @@ const Mapbox = ({apiUrl}: Props) => {
     
   }
   
+  async function addMarker(data: object) {
+    let res = await fetch(`${apiUrl}/mark/add`,
+        { method: 'post',
+          body: JSON.stringify(data),
+          headers : { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.accessToken}`
+          }
+        });
+    return res;
+  }
+
   async function handleLogout() {
     setIsLoading(true)
     let res = await fetch(`${apiUrl}/user/logout`,
