@@ -7,6 +7,10 @@ import { AiFillStar } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { RotatingLines } from "react-loader-spinner";
 import { format } from "timeago.js";
+import getNewTokens from "../../services/getNewTokens";
+import updateMarker from "../../services/updateMarker";
+import addMarker from "../../services/addMarker";
+import logout from "../../services/logout";
 interface MapMarker {
   latitude: number;
   longitude: number;
@@ -98,70 +102,44 @@ const Mapbox = ({ apiUrl }: Props) => {
       rating,
       username: localStorage.username,
     };
-    let res = await addMarker(data);
+    let res = await addMarker(apiUrl, data);
     if (res.status === 403) {
-      if(await getNewTokens()) res = await addMarker(data);
-      else alert('Error occured');
+      if (await getNewTokens(apiUrl)) res = await addMarker(apiUrl, data);
+      else alert("Error occured");
     }
     setNewPosition(null);
     clearValues();
     await fetchMarkers();
   }
 
-  async function addMarker(data: object) {
-    let res = await fetch(`${apiUrl}/mark/add`, {
-      method: "post",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.accessToken}`,
-      },
-    });
-    return res;
-  }
-  async function handleUpdateMarkerSubmit(e: FormEvent<HTMLFormElement>, id: string) {
+  async function handleUpdateMarkerSubmit(
+    e: FormEvent<HTMLFormElement>,
+    id: string
+  ) {
     e.preventDefault();
     const data = {
       title,
       description,
       rating,
     };
-    let res = await updateMarker(data, id);
+    let res = await updateMarker(apiUrl, data, id);
     if (res.status === 403) {
-      if(await getNewTokens()) res = await updateMarker(data, id);
-      else alert('Error occured');
+      if (await getNewTokens(apiUrl)) res = await updateMarker(apiUrl, data, id);
+      else alert("Error occured");
     }
     setNewPosition(null);
     clearValues();
     await fetchMarkers();
   }
-  async function updateMarker(data: object, id:string) {
-    let res = await fetch(`${apiUrl}/mark/update/${id}`, {
-      method: "put",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.accessToken}`,
-      },
-    });
-    return res;
-  }
   async function handleUpdateClick(marker: MapMarker) {
     setIsUpdating(true);
-    setTitle(marker.title)
-    setDescription(marker.description)
-    setRating(marker.rating)
+    setTitle(marker.title);
+    setDescription(marker.description);
+    setRating(marker.rating);
   }
   async function handleLogout() {
     setIsLoading(true);
-    let res = await fetch(`${apiUrl}/user/logout`, {
-      method: "delete",
-      body: JSON.stringify({ refreshToken: localStorage.refreshToken }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
+    await logout(apiUrl);
     localStorage.removeItem("username");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
@@ -172,24 +150,6 @@ const Mapbox = ({ apiUrl }: Props) => {
     setTitle("");
     setDescription("");
     setRating(1);
-  }
-
-  async function getNewTokens() {
-    let resCheckToken = await fetch(`${apiUrl}/user/token`, {
-      method: "post",
-      body: JSON.stringify({ token: localStorage.refreshToken }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (resCheckToken.status === 200) {
-      let result = await resCheckToken.json();
-      localStorage.accessToken = result.accessToken;
-      localStorage.refreshToken = result.refreshToken;
-      return true;
-    } else {
-      return false;
-    }
   }
 
   return (
@@ -234,13 +194,21 @@ const Mapbox = ({ apiUrl }: Props) => {
                 {marker._id === currentPositonId && (
                   <Popup
                     latitude={marker.latitude}
-                    onClose={() => [setCurrentPositionId(null), setIsUpdating(false), clearValues()]}
+                    onClose={() => [
+                      setCurrentPositionId(null),
+                      setIsUpdating(false),
+                      clearValues(),
+                    ]}
                     longitude={marker.longitude}
                     anchor="top"
                   >
                     {isUpdating ? (
                       <>
-                        <form onSubmit={e => handleUpdateMarkerSubmit(e, marker._id)}>
+                        <form
+                          onSubmit={(e) =>
+                            handleUpdateMarkerSubmit(e, marker._id)
+                          }
+                        >
                           <label htmlFor="title" className={s.formLabel}>
                             Title
                           </label>
@@ -285,7 +253,9 @@ const Mapbox = ({ apiUrl }: Props) => {
                             <option value={5}>5</option>
                           </select>{" "}
                           <br />
-                          <button className={s.formButton}>Update marker</button>
+                          <button className={s.formButton}>
+                            Update marker
+                          </button>
                         </form>
                       </>
                     ) : (
@@ -316,7 +286,14 @@ const Mapbox = ({ apiUrl }: Props) => {
                             <>{format(marker.date)}</>
                           )}
                         </p>
-                        {marker.username === localStorage.username && (<button className={s.updateButton} onClick={() => handleUpdateClick(marker)}>Update marker</button>)}
+                        {marker.username === localStorage.username && (
+                          <button
+                            className={s.updateButton}
+                            onClick={() => handleUpdateClick(marker)}
+                          >
+                            Update marker
+                          </button>
+                        )}
                       </>
                     )}
                   </Popup>
