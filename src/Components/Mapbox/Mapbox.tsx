@@ -300,7 +300,7 @@ const Mapbox = ({ apiUrl }: Props) => {
                               className={s.button}
                               onClick={() => handleUpdateClick(marker)}
                             >
-                              Update
+                              Edit
                             </button>
                             <button
                               className={s.button}
