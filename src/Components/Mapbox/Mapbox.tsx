@@ -11,6 +11,7 @@ import getNewTokens from "../../services/getNewTokens";
 import updateMarker from "../../services/updateMarker";
 import addMarker from "../../services/addMarker";
 import logout from "../../services/logout";
+import deleteMarker from "../../services/deleteMarker";
 interface MapMarker {
   latitude: number;
   longitude: number;
@@ -127,7 +128,6 @@ const Mapbox = ({ apiUrl }: Props) => {
       if (await getNewTokens(apiUrl)) res = await updateMarker(apiUrl, data, id);
       else alert("Error occured");
     }
-    setNewPosition(null);
     clearValues();
     await fetchMarkers();
   }
@@ -136,6 +136,14 @@ const Mapbox = ({ apiUrl }: Props) => {
     setTitle(marker.title);
     setDescription(marker.description);
     setRating(marker.rating);
+  }
+  async function handleDeleteClick(marker: MapMarker) {
+    let res = await deleteMarker(apiUrl, marker._id);
+    if (res.status === 403) {
+      if (await getNewTokens(apiUrl)) res = await deleteMarker(apiUrl, marker._id);
+      else alert("Error occured");
+    }
+    await fetchMarkers();
   }
   async function handleLogout() {
     setIsLoading(true);
@@ -287,12 +295,20 @@ const Mapbox = ({ apiUrl }: Props) => {
                           )}
                         </p>
                         {marker.username === localStorage.username && (
-                          <button
-                            className={s.updateButton}
-                            onClick={() => handleUpdateClick(marker)}
-                          >
-                            Update marker
-                          </button>
+                          <div className={s.buttonsContainer}>
+                            <button
+                              className={s.button}
+                              onClick={() => handleUpdateClick(marker)}
+                            >
+                              Update
+                            </button>
+                            <button
+                              className={s.button}
+                              onClick={() => handleDeleteClick(marker)}
+                            >
+                              Delete
+                            </button>
+                          </div>
                         )}
                       </>
                     )}

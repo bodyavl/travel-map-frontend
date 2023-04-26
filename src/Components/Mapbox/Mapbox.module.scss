@@ -27,14 +27,20 @@ form {
         color: white;
     }
 }
-.updateButton {
-    font-family: 'Inter', sans-serif;
-    border-radius: 7px;
-    padding: 0.5em 1em;
-    border: none;
-    background-color: rgb(230, 144, 82);
-    color: white;
+.buttonsContainer {
+    display: flex;
+    gap: 10px;
+    & .button {
+        font-family: 'Inter', sans-serif;
+        border-radius: 7px;
+        padding: 0.5em 1em;
+        border: none;
+        background-color: rgb(230, 144, 82);
+        color: white;
+    }
+    
 }
+
 
 
 .navbar {
