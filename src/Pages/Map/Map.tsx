@@ -1,4 +1,4 @@
-import Mapbox from "../../Components/Mapbox/Mapbox"
+import Mapbox from "../../Components/UI/Mapbox/Mapbox"
 interface Props {
   apiUrl: string
 }

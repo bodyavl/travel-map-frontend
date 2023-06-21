@@ -1,6 +1,6 @@
 import s from './Login.module.scss'
 import { FormEvent, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 interface Props {
     apiUrl: string
 }
@@ -50,6 +50,7 @@ const Login = ({apiUrl}: Props) => {
                 <input type="password" id='password' className={s.formTextInput} name='password' onChange={e => setPassword(e.target.value)} disabled={isLoading} required/>
                 <button className={s.formButton} disabled={isLoading}>Login</button>
             </form>
+            <Link to={'/forgotPassword'}></Link>
         </>
   )
 }
