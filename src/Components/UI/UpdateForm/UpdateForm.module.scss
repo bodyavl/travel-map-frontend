@@ -3,6 +3,9 @@ form {
     display: flex;
     flex-direction: column;
     padding: 5px;
+    & textarea {
+        font-family: 'Inter', sans-serif;
+    }
     & .formButton {
         font-family: 'Inter', sans-serif;
         border-radius: 7px;
