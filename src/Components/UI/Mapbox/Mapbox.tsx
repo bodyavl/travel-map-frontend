@@ -99,7 +99,7 @@ const Mapbox = ({ apiUrl }: Props) => {
           >
             {markers?.map((marker, index) => (
               <MapMarker
-                key={index.toString()}
+                key={index}
                 marker={marker}
                 isUpdating={isUpdating}
                 updateIsUpdating={setIsUpdating}
