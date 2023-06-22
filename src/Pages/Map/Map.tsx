@@ -4,7 +4,7 @@ interface Props {
 }
 const Map = ({apiUrl}: Props) => {
   return (
-    <Mapbox apiUrl={apiUrl}/>
+    <Mapbox/>
   )
 }
 
