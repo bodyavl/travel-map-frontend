@@ -15,7 +15,6 @@ interface IMapMarker {
   _id: string;
 }
 interface IMapMarkerProps {
-  key: string,
   marker: IMapMarker;
   isUpdating: boolean,
   updateIsUpdating: (value: boolean) => void
@@ -29,7 +28,7 @@ interface IMapMarkerProps {
   updateCurrentPositionId: (value: string | null) => void;
 }
 
-const MapMarker = ({ key, marker, isUpdating, updateIsUpdating, fetchMarkers, handleClick, currentPositionId, updateCurrentPositionId}: IMapMarkerProps) => {
+const MapMarker = ({ marker, isUpdating, updateIsUpdating, fetchMarkers, handleClick, currentPositionId, updateCurrentPositionId}: IMapMarkerProps) => {
   return (
     <>
       <Marker
