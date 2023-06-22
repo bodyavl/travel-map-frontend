@@ -2,12 +2,14 @@ import { Link } from "react-router-dom";
 import s from "./Navbar.module.scss";
 import logout from "../../../services/logout";
 import { Value } from "sass";
+import { RotatingLines } from "react-loader-spinner";
 
 interface INavbarProps {
     updateIsLoading: (value: boolean) => void
+    isLoading: boolean
 }
 
-const Navbar = ({updateIsLoading}: INavbarProps) => {
+const Navbar = ({updateIsLoading, isLoading}: INavbarProps) => {
 
   async function handleLogout() {
     updateIsLoading(true);
@@ -19,6 +21,11 @@ const Navbar = ({updateIsLoading}: INavbarProps) => {
   }
   return (
     <div className={s.navbar}>
+      {isLoading && (
+          <div className={s.loaderContainer}>
+            <RotatingLines strokeColor="black" width="20" />
+          </div>
+        )}
       {localStorage.username ? (
         <button className={s.loginButton} onClick={handleLogout}>
           Log out

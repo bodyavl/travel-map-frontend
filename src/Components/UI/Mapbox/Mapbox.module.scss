@@ -3,44 +3,6 @@
     width: 100vw;
 }
 
-.loaderContainer {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    z-index: 1;
-}
-
-form {
-    font-family: 'Inter', sans-serif;
-    display: flex;
-    flex-direction: column;
-    padding: 5px;
-    & .formButton {
-        font-family: 'Inter', sans-serif;
-        border-radius: 7px;
-        padding: 0.5em 1em;
-        border: none;
-        background-color: rgb(230, 144, 82);
-        color: white;
-    }
-}
-.buttonsContainer {
-    display: flex;
-    gap: 10px;
-    & .button {
-        font-family: 'Inter', sans-serif;
-        border-radius: 7px;
-        padding: 0.5em 1em;
-        border: none;
-        background-color: rgb(230, 144, 82);
-        color: white;
-    }
-    
-}
-
 
 
 

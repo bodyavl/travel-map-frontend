@@ -5,7 +5,20 @@ import ButtonPopup from '../ButtonPopup/ButtonPopup';
 import deleteMarker from '../../../services/deleteMarker';
 import getNewTokens from '../../../services/getNewTokens';
 
+interface IMapMarker {
+  latitude: number;
+  longitude: number;
+  rating: number;
+  title: string;
+  description: string;
+  username: string;
+  createdAt: Date;
+  updatedAt: Date;
+  _id: string;
+}
+
 interface IMarkerInfoProps {
+    deleteMarkerInArray: (id: string) => void
     id: string,
     title: string,
     description: string,
@@ -13,19 +26,19 @@ interface IMarkerInfoProps {
     username: string,
     date: Date,
     isUpdated: boolean
-    fetchMarkers: () => Promise<void>;
     updateIsUpdating: (value: boolean) => void;
 }
 
-const MarkerInfo = ({id, title, description, rating, username, date, isUpdated, fetchMarkers, updateIsUpdating}: IMarkerInfoProps) => {
+const MarkerInfo = ({ id, title, description, rating, username, date, isUpdated, updateIsUpdating, deleteMarkerInArray}: IMarkerInfoProps) => {
   async function handleDeleteClick() {
     let res = await deleteMarker(id);
     if (res.status === 403) {
       if (await getNewTokens())
         res = await deleteMarker(id);
-      else alert("Error occured");
+      else return alert("Error occured");
     }
-    await fetchMarkers();
+    let result: IMapMarker = await res.json();
+    deleteMarkerInArray(result._id);
   }
   return (
     <>

@@ -3,15 +3,27 @@ import s from "./UpdateForm.module.scss";
 import updateMarker from "../../../services/updateMarker";
 import getNewTokens from "../../../services/getNewTokens";
 
+interface IMapMarker {
+  latitude: number;
+  longitude: number;
+  rating: number;
+  title: string;
+  description: string;
+  username: string;
+  createdAt: Date;
+  updatedAt: Date;
+  _id: string;
+}
 interface IUpdateFormProps {
-  fetchMarkers: () => Promise<void>,
+  updateMarkerInArray: (value: IMapMarker) => void,
+  updateIsUpdating: (value: boolean) => void,
   id: string;
   initialTitle: string;
   initialDescription: string;
   initialRating: number;
 }
 
-const UpdateForm = ({ fetchMarkers, id, initialTitle, initialDescription, initialRating}: IUpdateFormProps) => {
+const UpdateForm = ({ updateIsUpdating, updateMarkerInArray, id, initialTitle, initialDescription, initialRating}: IUpdateFormProps) => {
   const [title, setTitle] = useState(initialTitle);
   const [description, setDescription] = useState(initialDescription);
   const [rating, setRating] = useState(initialRating);
@@ -27,12 +39,13 @@ const UpdateForm = ({ fetchMarkers, id, initialTitle, initialDescription, initia
       rating,
     };
     let res = await updateMarker(data, id);
-    if(res.status === 500) return alert("Error occured");
     if (res.status === 403) {
       if (await getNewTokens()) res = await updateMarker(data, id);
-      else alert("Error occured");
+      else return alert("Error occured");
     }
-    await fetchMarkers();
+    let result: IMapMarker = await res.json();
+    updateMarkerInArray(result);
+    updateIsUpdating(false);
   }
   return (
     <form onSubmit={(e) => handleUpdateMarkerSubmit(e, id)}>

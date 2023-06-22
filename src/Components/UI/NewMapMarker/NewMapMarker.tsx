@@ -7,15 +7,26 @@ interface Position {
   lng: number;
   lat: number;
 }
+interface IMapMarker {
+  latitude: number;
+  longitude: number;
+  rating: number;
+  title: string;
+  description: string;
+  username: string;
+  createdAt: Date;
+  updatedAt: Date;
+  _id: string;
+}
 interface INewMapMarkerProps {
-  socket: Socket;
+  addMarkerToArray: (value: IMapMarker) => void
   newPosition: Position;
   updateNewPosition: (value: Position | null) => void;
   fetchMarkers: () => Promise<void>;
 }
 
 const NewMapMarker = ({
-  socket,
+  addMarkerToArray,
   newPosition,
   updateNewPosition,
   fetchMarkers,
@@ -34,7 +45,7 @@ const NewMapMarker = ({
         anchor="top"
       >
         <AddForm
-          socket={socket}
+          addMarkerToArray={addMarkerToArray}
           newPosition={newPosition}
           fetchMarkers={fetchMarkers}
           updateNewPosition={updateNewPosition}

@@ -3,7 +3,6 @@ import Map, { MapRef, Marker, Popup, MapboxEvent } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useState, useEffect, useRef } from "react";
 import s from "./Mapbox.module.scss";
-import { RotatingLines } from "react-loader-spinner";
 import Navbar from "../Navbar/Navbar";
 import MapMarker from "../MapMarker/MapMarker";
 import getMarkers from "../../../services/getMarkers";
@@ -38,7 +37,7 @@ const Mapbox = () => {
     null
   );
   const [newPosition, setNewPosition] = useState<Position | null>(null);
-  const [markers, setMarkers] = useState<Array<IMapMarker>>();
+  const [markers, setMarkers] = useState<IMapMarker[]>();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -47,8 +46,20 @@ const Mapbox = () => {
     setIsLoading(true);
     let result: Array<IMapMarker> = await (await getMarkers()).json();
     if (result) setMarkers(result);
-    console.log(result);
     setIsLoading(false);
+    
+  }
+  function addMarkerToArray(value: IMapMarker) {
+    setMarkers([...(markers as []), value]);
+  }
+  function updateMarkerInArray(value: IMapMarker) {
+    setMarkers([
+      ...(markers?.filter((marker) => marker._id !== value._id) as []),
+      value,
+    ]);
+  }
+  function deleteMarkerInArray(id: string) {
+    setMarkers([...(markers?.filter((marker) => marker._id !== id) as [])]);
   }
 
   useEffect(() => {
@@ -80,46 +91,42 @@ const Mapbox = () => {
   }
   return (
     <div className={s.map_container}>
-      {isLoading ? (
-        <div className={s.loaderContainer}>
-          <RotatingLines strokeColor="black" width="50" />
-        </div>
-      ) : (
-        <>
-          <Map
-            ref={mapRef}
-            mapboxAccessToken={import.meta.env.VITE_MAPBOXTOKEN}
-            {...viewState}
-            onMove={(evt) => setViewState(evt.viewState)}
-            onDblClick={handleMapDbClick}
-            onClick={() => setNewPosition(null)}
-            doubleClickZoom={false}
-            mapStyle="mapbox://styles/mapbox/streets-v12"
-          >
-            {markers?.map((marker, index) => (
-              <MapMarker
-                key={index}
-                marker={marker}
-                isUpdating={isUpdating}
-                updateIsUpdating={setIsUpdating}
-                fetchMarkers={fetchMarkers}
-                currentPositionId={currentPositionId}
-                updateCurrentPositionId={setCurrentPositionId}
-                handleClick={handleMarkerClick}
-              />
-            ))}
-            {localStorage.username && newPosition && (
-              <NewMapMarker
-                socket={socket}
-                fetchMarkers={fetchMarkers}
-                newPosition={newPosition}
-                updateNewPosition={setNewPosition}
-              />
-            )}
-          </Map>
-          <Navbar updateIsLoading={setIsLoading} />
-        </>
-      )}
+      <>
+        <Map
+          ref={mapRef}
+          mapboxAccessToken={import.meta.env.VITE_MAPBOXTOKEN}
+          {...viewState}
+          onMove={(evt) => setViewState(evt.viewState)}
+          onDblClick={handleMapDbClick}
+          onClick={() => setNewPosition(null)}
+          doubleClickZoom={false}
+          mapStyle="mapbox://styles/mapbox/streets-v12"
+        >
+          {markers?.map((marker, index) => (
+            <MapMarker
+              updateMarkerInArray={updateMarkerInArray}
+              deleteMarkerInArray={deleteMarkerInArray}
+              key={index}
+              marker={marker}
+              isUpdating={isUpdating}
+              updateIsUpdating={setIsUpdating}
+              fetchMarkers={fetchMarkers}
+              currentPositionId={currentPositionId}
+              updateCurrentPositionId={setCurrentPositionId}
+              handleClick={handleMarkerClick}
+            />
+          ))}
+          {localStorage.username && newPosition && (
+            <NewMapMarker
+              addMarkerToArray={addMarkerToArray}
+              fetchMarkers={fetchMarkers}
+              newPosition={newPosition}
+              updateNewPosition={setNewPosition}
+            />
+          )}
+        </Map>
+        <Navbar isLoading={isLoading} updateIsLoading={setIsLoading} />
+      </>
     </div>
   );
 };
