@@ -1,5 +1,5 @@
-export default async function addMarker(apiUrl: string, data: object) {
-    let res = await fetch(`${apiUrl}/mark/add`, {
+export default async function addMarker(data: object): Promise<Response> {
+    let res = await fetch(`${import.meta.env.VITE_API_URL}/mark/add`, {
       method: "post",
       body: JSON.stringify(data),
       headers: {

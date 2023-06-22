@@ -19,10 +19,10 @@ interface IMarkerInfoProps {
 
 const MarkerInfo = ({id, title, description, rating, username, date, isUpdated, fetchMarkers, updateIsUpdating}: IMarkerInfoProps) => {
   async function handleDeleteClick() {
-    let res = await deleteMarker(import.meta.env.VITE_API_URL, id);
+    let res = await deleteMarker(id);
     if (res.status === 403) {
-      if (await getNewTokens(import.meta.env.VITE_API_URL))
-        res = await deleteMarker(import.meta.env.VITE_API_URL, id);
+      if (await getNewTokens())
+        res = await deleteMarker(id);
       else alert("Error occured");
     }
     await fetchMarkers();
@@ -37,6 +37,7 @@ const MarkerInfo = ({id, title, description, rating, username, date, isUpdated, 
           const ratingValue = i + 1;
           return (
             <AiFillStar
+              key={i}
               color={ratingValue <= rating ? "#ffc107" : "#e4e5e9"}
               size={25}
             />

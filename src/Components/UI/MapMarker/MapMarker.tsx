@@ -1,7 +1,9 @@
-import React from "react";
-import { MapboxEvent, Marker } from "react-map-gl";
+import React, { useState } from "react";
+import { MapboxEvent, Marker, Popup } from "react-map-gl";
+import UpdateForm from "../UpdateForm/UpdateForm";
+import MarkerInfo from "../MarkerInfo/MarkerInfo";
 
-interface IMarkerProps {
+interface IMapMarker {
   latitude: number;
   longitude: number;
   rating: number;
@@ -11,26 +13,69 @@ interface IMarkerProps {
   date: Date;
   updateDate?: Date;
   _id: string;
-  color: string;
-  onClick: (
+}
+interface IMapMarkerProps {
+  key: string,
+  marker: IMapMarker;
+  isUpdating: boolean,
+  updateIsUpdating: (value: boolean) => void
+  fetchMarkers: () => Promise<void>
+  handleClick: (
     e: MapboxEvent<MouseEvent>,
     id: string,
     longitude: number,
-    latitude: number
-  ) => void;
+    latitude: number) => void,
+  currentPositionId: string | null,
+  updateCurrentPositionId: (value: string | null) => void;
 }
 
-const MapMarker = (Props: IMarkerProps) => {
+const MapMarker = ({ key, marker, isUpdating, updateIsUpdating, fetchMarkers, handleClick, currentPositionId, updateCurrentPositionId}: IMapMarkerProps) => {
   return (
-    <Marker
-      longitude={Props.longitude}
-      style={{ cursor: "pointer" }}
-      color={Props.color}
-      onClick={(e) =>
-        Props.onClick(e, Props._id, Props.longitude, Props.latitude)
-      }
-      latitude={Props.latitude}
-    ></Marker>
+    <>
+      <Marker
+        longitude={marker.longitude}
+        style={{ cursor: "pointer" }}
+        color={
+          localStorage.username && marker.username === localStorage.username
+            ? "orange"
+            : ""
+        }
+        onClick={(e) =>
+          handleClick(e, marker._id, marker.longitude, marker.latitude)
+        }
+        latitude={marker.latitude}
+      ></Marker>
+      {marker._id === currentPositionId && (
+        <Popup
+          latitude={marker.latitude}
+          onClose={() => [updateCurrentPositionId(null), updateIsUpdating(false)]}
+          longitude={marker.longitude}
+          anchor="top"
+        >
+          {isUpdating ? (
+            <UpdateForm
+              fetchMarkers={fetchMarkers}
+              id={marker._id}
+              initialTitle={marker.title}
+              initialDescription={marker.description}
+              initialRating={marker.rating}
+            />
+          ) : (
+            <MarkerInfo
+              id={marker._id}
+              title={marker.title}
+              description={marker.description}
+              rating={marker.rating}
+              username={marker.username}
+              date={marker.updateDate ? marker.updateDate : marker.date}
+              isUpdated={Boolean(marker.updateDate)}
+              updateIsUpdating={updateIsUpdating}
+              fetchMarkers={fetchMarkers}
+            />
+          )}
+        </Popup>
+      )}
+    </>
   );
 };
 

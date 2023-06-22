@@ -1,9 +1,8 @@
 export default async function updateMarker(
-  apiUrl: string,
   data: object,
   id: string
-) {
-  let res = await fetch(`${apiUrl}/mark/update/${id}`, {
+): Promise<Response> {
+  let res = await fetch(`${import.meta.env.VITE_API_URL}/mark/update/${id}`, {
     method: "put",
     body: JSON.stringify(data),
     headers: {

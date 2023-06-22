@@ -29,9 +29,9 @@ const AddForm = ({newPosition, fetchMarkers, updateNewPosition}: IAddFormProps) 
       rating,
       username: localStorage.username,
     };
-    let res = await addMarker(import.meta.env.VITE_API_URL, data);
+    let res = await addMarker(data);
     if (res.status === 403) {
-      if (await getNewTokens(import.meta.env.VITE_API_URL)) res = await addMarker(import.meta.env.VITE_API_URL, data);
+      if (await getNewTokens()) res = await addMarker(data);
       else alert("Error occured");
     }
     updateNewPosition(null);

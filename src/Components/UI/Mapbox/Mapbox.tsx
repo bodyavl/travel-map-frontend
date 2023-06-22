@@ -1,16 +1,14 @@
 import { MapMouseEvent } from "mapbox-gl";
 import Map, { MapRef, Marker, Popup, MapboxEvent } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useState, useEffect, FormEvent, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import s from "./Mapbox.module.scss";
-import { Link } from "react-router-dom";
 import { RotatingLines } from "react-loader-spinner";
-import getNewTokens from "../../../services/getNewTokens";
-import addMarker from "../../../services/addMarker";
-import logout from "../../../services/logout";
-import UpdateForm from "../UpdateForm/UpdateForm";
-import MarkerInfo from "../MarkerInfo/MarkerInfo";
 import AddForm from "../AddForm/AddForm";
+import Navbar from "../Navbar/Navbar";
+import MapMarker from "../MapMarker/MapMarker";
+import getMarkers from "../../../services/getMarkers";
+import NewMapMarker from "../NewMapMarker/NewMapMarker";
 interface IMapMarker {
   latitude: number;
   longitude: number;
@@ -38,29 +36,19 @@ const Mapbox = ({ apiUrl }: Props) => {
     zoom: 7,
   });
   const mapRef = useRef<MapRef>(null);
-  const [currentPositonId, setCurrentPositionId] = useState<string | null>(
+  const [currentPositionId, setCurrentPositionId] = useState<string | null>(
     null
   );
   const [newPosition, setNewPosition] = useState<Position | null>(null);
   const [markers, setMarkers] = useState<Array<IMapMarker>>();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [rating, setRating] = useState(1);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
   async function fetchMarkers() {
     setIsLoading(true);
-    let res = await fetch(`${apiUrl}/mark`, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
-    let result: Array<IMapMarker> = await res.json();
-
-    setMarkers(result);
+    let result: Array<IMapMarker> = await (await getMarkers()).json();
+    if (result) setMarkers(result);
     setIsLoading(false);
   }
 
@@ -91,41 +79,6 @@ const Mapbox = ({ apiUrl }: Props) => {
       duration: 1000,
     });
   }
-
-  async function handleAddMarkerSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const data = {
-      latitude: newPosition?.lat,
-      longitude: newPosition?.lng,
-      title,
-      description,
-      rating,
-      username: localStorage.username,
-    };
-    let res = await addMarker(apiUrl, data);
-    if (res.status === 403) {
-      if (await getNewTokens(apiUrl)) res = await addMarker(apiUrl, data);
-      else alert("Error occured");
-    }
-    setNewPosition(null);
-    clearValues();
-    await fetchMarkers();
-  }
-  async function handleLogout() {
-    setIsLoading(true);
-    await logout(apiUrl);
-    localStorage.removeItem("username");
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    setIsLoading(false);
-  }
-
-  async function clearValues() {
-    setTitle("");
-    setDescription("");
-    setRating(1);
-  }
-
   return (
     <div className={s.map_container}>
       {isLoading ? (
@@ -145,99 +98,26 @@ const Mapbox = ({ apiUrl }: Props) => {
             mapStyle="mapbox://styles/mapbox/streets-v12"
           >
             {markers?.map((marker, index) => (
-              <div key={index}>
-                <Marker
-                  longitude={marker.longitude}
-                  style={{ cursor: "pointer" }}
-                  color={
-                    localStorage.username &&
-                    marker.username === localStorage.username
-                      ? "orange"
-                      : ""
-                  }
-                  onClick={(e) =>
-                    handleMarkerClick(
-                      e,
-                      marker._id,
-                      marker.longitude,
-                      marker.latitude
-                    )
-                  }
-                  latitude={marker.latitude}
-                ></Marker>
-                {marker._id === currentPositonId && (
-                  <Popup
-                    latitude={marker.latitude}
-                    onClose={() => [
-                      setCurrentPositionId(null),
-                      setIsUpdating(false),
-                      clearValues(),
-                    ]}
-                    longitude={marker.longitude}
-                    anchor="top"
-                  >
-                    {isUpdating ? (
-                      <UpdateForm
-                        onSubmit={handleAddMarkerSubmit}
-                        id={marker._id}
-                        initialTitle={marker.title}
-                        initialDescription={marker.description}
-                        initialRating={marker.rating}
-                      />
-                    ) : (
-                      <MarkerInfo
-                        id={marker._id}
-                        title={marker.title}
-                        description={marker.description}
-                        rating={marker.rating}
-                        username={marker.username}
-                        date={marker.updateDate ? marker.updateDate : marker.date}
-                        isUpdated={Boolean(marker.updateDate)}
-                        updateIsUpdating={setIsUpdating}
-                        fetchMarkers={fetchMarkers}
-                      />
-                    )}
-                  </Popup>
-                )}
-              </div>
+              <MapMarker
+                key={index.toString()}
+                marker={marker}
+                isUpdating={isUpdating}
+                updateIsUpdating={setIsUpdating}
+                fetchMarkers={fetchMarkers}
+                currentPositionId={currentPositionId}
+                updateCurrentPositionId={setCurrentPositionId}
+                handleClick={handleMarkerClick}
+              />
             ))}
             {localStorage.username && newPosition && (
-              <>
-                <Marker
-                  longitude={newPosition.lng}
-                  latitude={newPosition.lat}
-                  color="orange"
-                ></Marker>
-                <Popup
-                  longitude={newPosition.lng}
-                  latitude={newPosition.lat}
-                  onClose={() => setNewPosition(null)}
-                  anchor="top"
-                >
-                  <AddForm
-                    newPosition={newPosition}
-                    fetchMarkers={fetchMarkers}
-                    updateNewPosition={setNewPosition}/>
-                </Popup>
-              </>
+              <NewMapMarker
+                fetchMarkers={fetchMarkers}
+                newPosition={newPosition}
+                updateNewPosition={setNewPosition}
+              />
             )}
           </Map>
-          <div className={s.navbar}>
-            {localStorage.username ? (
-              <button className={s.loginButton} onClick={handleLogout}>
-                Log out
-              </button>
-            ) : (
-              <>
-                <Link className={s.loginButton} to={"/login"}>
-                  Log in
-                </Link>
-                <Link className={s.signupButton} to={"/signup"}>
-                  Sign up
-                </Link>
-              </>
-            )}
-          </div>
+          <Navbar updateIsLoading={setIsLoading} />
         </>
       )}
     </div>

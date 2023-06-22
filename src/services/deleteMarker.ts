@@ -1,5 +1,5 @@
-export default async function deleteMarker(apiUrl: string, id: string) {
-    let res = await fetch(`${apiUrl}/mark/delete/${id}`, {
+export default async function deleteMarker(id: string): Promise<Response> {
+    let res = await fetch(`${import.meta.env.VITE_API_URL}/mark/delete/${id}`, {
       method: "delete",
       headers: {
         "Content-Type": "application/json",

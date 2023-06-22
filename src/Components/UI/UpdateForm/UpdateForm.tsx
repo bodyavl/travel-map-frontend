@@ -1,27 +1,41 @@
 import { FormEvent, useState } from "react";
 import s from "./UpdateForm.module.scss";
+import updateMarker from "../../../services/updateMarker";
+import getNewTokens from "../../../services/getNewTokens";
 
 interface IUpdateFormProps {
-  onSubmit: (
-    e: FormEvent<HTMLFormElement>,
-    id: string,
-    title: string,
-    description: string,
-    rating: number
-  ) => void;
+  fetchMarkers: () => Promise<void>,
   id: string;
   initialTitle: string;
   initialDescription: string;
   initialRating: number;
 }
 
-const UpdateForm = ({ onSubmit, id, initialTitle, initialDescription, initialRating}: IUpdateFormProps) => {
+const UpdateForm = ({ fetchMarkers, id, initialTitle, initialDescription, initialRating}: IUpdateFormProps) => {
   const [title, setTitle] = useState(initialTitle);
   const [description, setDescription] = useState(initialDescription);
   const [rating, setRating] = useState(initialRating);
 
+  async function handleUpdateMarkerSubmit(
+    e: FormEvent<HTMLFormElement>,
+    id: string
+  ) {
+    e.preventDefault();
+    const data = {
+      title,
+      description,
+      rating,
+    };
+    let res = await updateMarker(data, id);
+    if(res.status === 500) return alert("Error occured");
+    if (res.status === 403) {
+      if (await getNewTokens()) res = await updateMarker(data, id);
+      else alert("Error occured");
+    }
+    await fetchMarkers();
+  }
   return (
-    <form onSubmit={(e) => onSubmit(e, id, title, description, rating)}>
+    <form onSubmit={(e) => handleUpdateMarkerSubmit(e, id)}>
       <label htmlFor="title" className={s.formLabel}>
         Title
       </label>

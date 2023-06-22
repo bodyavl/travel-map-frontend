@@ -1,5 +1,5 @@
-export default async function getNewTokens(apiUrl: string) {
-  let resCheckToken = await fetch(`${apiUrl}/user/token`, {
+export default async function getNewTokens(): Promise<boolean> {
+  let resCheckToken = await fetch(`${import.meta.env.VITE_API_URL}/user/token`, {
     method: "post",
     body: JSON.stringify({ token: localStorage.refreshToken }),
     headers: {
