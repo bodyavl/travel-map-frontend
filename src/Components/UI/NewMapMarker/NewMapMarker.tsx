@@ -1,18 +1,25 @@
 import React from "react";
 import { Marker, Popup } from "react-map-gl";
 import AddForm from "../AddForm/AddForm";
+import { Socket } from "socket.io-client";
 
 interface Position {
-    lng: number,
-    lat: number
+  lng: number;
+  lat: number;
 }
 interface INewMapMarkerProps {
-    newPosition: Position
-    updateNewPosition: (value: Position | null) => void
-    fetchMarkers: () => Promise<void>
+  socket: Socket;
+  newPosition: Position;
+  updateNewPosition: (value: Position | null) => void;
+  fetchMarkers: () => Promise<void>;
 }
 
-const NewMapMarker = ({newPosition, updateNewPosition, fetchMarkers}: INewMapMarkerProps) => {
+const NewMapMarker = ({
+  socket,
+  newPosition,
+  updateNewPosition,
+  fetchMarkers,
+}: INewMapMarkerProps) => {
   return (
     <>
       <Marker
@@ -27,6 +34,7 @@ const NewMapMarker = ({newPosition, updateNewPosition, fetchMarkers}: INewMapMar
         anchor="top"
       >
         <AddForm
+          socket={socket}
           newPosition={newPosition}
           fetchMarkers={fetchMarkers}
           updateNewPosition={updateNewPosition}

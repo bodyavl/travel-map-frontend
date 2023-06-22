@@ -2,18 +2,20 @@ import { FormEvent, useState } from "react";
 import s from './AddForm.module.scss'
 import addMarker from "../../../services/addMarker";
 import getNewTokens from "../../../services/getNewTokens";
+import { Socket } from "socket.io-client";
 
 interface Position {
     lng: number;
     lat: number;
 }
 interface IAddFormProps {
+    socket: Socket
     newPosition: Position,
     updateNewPosition: (value: Position | null) => void
     fetchMarkers: () => Promise<void>
 }
 
-const AddForm = ({newPosition, fetchMarkers, updateNewPosition}: IAddFormProps) => {
+const AddForm = ({socket, newPosition, fetchMarkers, updateNewPosition}: IAddFormProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [rating, setRating] = useState(1);
@@ -36,7 +38,7 @@ const AddForm = ({newPosition, fetchMarkers, updateNewPosition}: IAddFormProps) 
     }
     updateNewPosition(null);
     clearValues();
-    await fetchMarkers();
+    
   }
   async function clearValues() {
     setTitle("");

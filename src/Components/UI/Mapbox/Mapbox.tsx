@@ -4,11 +4,13 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { useState, useEffect, useRef } from "react";
 import s from "./Mapbox.module.scss";
 import { RotatingLines } from "react-loader-spinner";
-import AddForm from "../AddForm/AddForm";
 import Navbar from "../Navbar/Navbar";
 import MapMarker from "../MapMarker/MapMarker";
 import getMarkers from "../../../services/getMarkers";
 import NewMapMarker from "../NewMapMarker/NewMapMarker";
+import { io } from "socket.io-client";
+
+const socket = io(import.meta.env.VITE_API_URL);
 interface IMapMarker {
   latitude: number;
   longitude: number;
@@ -16,8 +18,8 @@ interface IMapMarker {
   title: string;
   description: string;
   username: string;
-  date: Date;
-  updateDate?: Date;
+  createdAt: Date;
+  updatedAt: Date;
   _id: string;
 }
 interface Position {
@@ -25,11 +27,7 @@ interface Position {
   lat: number;
 }
 
-interface Props {
-  apiUrl: string;
-}
-
-const Mapbox = ({ apiUrl }: Props) => {
+const Mapbox = () => {
   const [viewState, setViewState] = useState({
     longitude: 30.523333,
     latitude: 50.45,
@@ -49,6 +47,7 @@ const Mapbox = ({ apiUrl }: Props) => {
     setIsLoading(true);
     let result: Array<IMapMarker> = await (await getMarkers()).json();
     if (result) setMarkers(result);
+    console.log(result);
     setIsLoading(false);
   }
 
@@ -111,6 +110,7 @@ const Mapbox = ({ apiUrl }: Props) => {
             ))}
             {localStorage.username && newPosition && (
               <NewMapMarker
+                socket={socket}
                 fetchMarkers={fetchMarkers}
                 newPosition={newPosition}
                 updateNewPosition={setNewPosition}

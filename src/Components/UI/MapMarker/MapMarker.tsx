@@ -10,8 +10,8 @@ interface IMapMarker {
   title: string;
   description: string;
   username: string;
-  date: Date;
-  updateDate?: Date;
+  createdAt: Date;
+  updatedAt: Date;
   _id: string;
 }
 interface IMapMarkerProps {
@@ -66,8 +66,8 @@ const MapMarker = ({ marker, isUpdating, updateIsUpdating, fetchMarkers, handleC
               description={marker.description}
               rating={marker.rating}
               username={marker.username}
-              date={marker.updateDate ? marker.updateDate : marker.date}
-              isUpdated={Boolean(marker.updateDate)}
+              date={marker.updatedAt === marker.createdAt ? marker.createdAt : marker.updatedAt}
+              isUpdated={Boolean(marker.updatedAt !== marker.createdAt)}
               updateIsUpdating={updateIsUpdating}
               fetchMarkers={fetchMarkers}
             />
