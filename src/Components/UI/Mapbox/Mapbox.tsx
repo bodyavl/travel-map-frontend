@@ -63,14 +63,15 @@ const Mapbox = () => {
     setMarkers([...(markers?.filter((marker) => marker._id !== id) as [])]);
   }
 
-  socket.on('fetch new', addMarkerToArray)
-  socket.on('fetch update', updateMarkerInArray)
-  socket.on('fetch delete', deleteMarkerInArray)
-
-
   useEffect(() => {
     fetchMarkers();
   }, []);
+
+  useEffect(() => {
+    socket.on('fetch new', addMarkerToArray)
+    socket.on('fetch update', updateMarkerInArray)
+    socket.on('fetch delete', deleteMarkerInArray)
+  }, [socket])
 
   function handleMarkerClick(
     e: MapboxEvent<MouseEvent>,
