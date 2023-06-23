@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { MapboxEvent, Marker, Popup } from "react-map-gl";
 import UpdateForm from "../UpdateForm/UpdateForm";
 import MarkerInfo from "../MarkerInfo/MarkerInfo";
+import { Socket } from "socket.io-client";
 
 interface IMapMarker {
   latitude: number;
@@ -15,12 +16,12 @@ interface IMapMarker {
   _id: string;
 }
 interface IMapMarkerProps {
+  socket: Socket,
   marker: IMapMarker;
   isUpdating: boolean;
   updateMarkerInArray: (value: IMapMarker) => void;
   deleteMarkerInArray: (id: string) => void;
   updateIsUpdating: (value: boolean) => void;
-  fetchMarkers: () => Promise<void>;
   handleClick: (
     e: MapboxEvent<MouseEvent>,
     id: string,
@@ -32,6 +33,7 @@ interface IMapMarkerProps {
 }
 
 const MapMarker = ({
+  socket,
   marker,
   updateMarkerInArray,
   deleteMarkerInArray,
@@ -68,6 +70,7 @@ const MapMarker = ({
         >
           {isUpdating ? (
             <UpdateForm
+              socket={socket}
               updateIsUpdating={updateIsUpdating}
               updateMarkerInArray={updateMarkerInArray}
               id={marker._id}
@@ -77,6 +80,7 @@ const MapMarker = ({
             />
           ) : (
             <MarkerInfo
+              socket={socket}
               deleteMarkerInArray={deleteMarkerInArray}
               id={marker._id}
               title={marker.title}

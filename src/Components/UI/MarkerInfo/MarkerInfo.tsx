@@ -4,6 +4,7 @@ import { format } from "timeago.js";
 import ButtonPopup from '../ButtonPopup/ButtonPopup';
 import deleteMarker from '../../../services/deleteMarker';
 import getNewTokens from '../../../services/getNewTokens';
+import { Socket } from 'socket.io-client';
 
 interface IMapMarker {
   latitude: number;
@@ -18,6 +19,7 @@ interface IMapMarker {
 }
 
 interface IMarkerInfoProps {
+    socket: Socket,
     deleteMarkerInArray: (id: string) => void
     id: string,
     title: string,
@@ -29,7 +31,7 @@ interface IMarkerInfoProps {
     updateIsUpdating: (value: boolean) => void;
 }
 
-const MarkerInfo = ({ id, title, description, rating, username, date, isUpdated, updateIsUpdating, deleteMarkerInArray}: IMarkerInfoProps) => {
+const MarkerInfo = ({ socket, id, title, description, rating, username, date, isUpdated, updateIsUpdating, deleteMarkerInArray}: IMarkerInfoProps) => {
   async function handleDeleteClick() {
     let res = await deleteMarker(id);
     if (res.status === 403) {
@@ -39,6 +41,7 @@ const MarkerInfo = ({ id, title, description, rating, username, date, isUpdated,
     }
     let result: IMapMarker = await res.json();
     deleteMarkerInArray(result._id);
+    socket.emit('delete marker', result._id);
   }
   return (
     <>

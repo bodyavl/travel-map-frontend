@@ -8,8 +8,8 @@ import MapMarker from "../MapMarker/MapMarker";
 import getMarkers from "../../../services/getMarkers";
 import NewMapMarker from "../NewMapMarker/NewMapMarker";
 import { io } from "socket.io-client";
-
 const socket = io(import.meta.env.VITE_API_URL);
+
 interface IMapMarker {
   latitude: number;
   longitude: number;
@@ -48,6 +48,7 @@ const Mapbox = () => {
     if (result) setMarkers(result);
     setIsLoading(false);
     
+    
   }
   function addMarkerToArray(value: IMapMarker) {
     setMarkers([...(markers as []), value]);
@@ -61,6 +62,11 @@ const Mapbox = () => {
   function deleteMarkerInArray(id: string) {
     setMarkers([...(markers?.filter((marker) => marker._id !== id) as [])]);
   }
+
+  socket.on('fetch new', addMarkerToArray)
+  socket.on('fetch update', updateMarkerInArray)
+  socket.on('fetch delete', deleteMarkerInArray)
+
 
   useEffect(() => {
     fetchMarkers();
@@ -104,13 +110,13 @@ const Mapbox = () => {
         >
           {markers?.map((marker, index) => (
             <MapMarker
+              socket={socket}
               updateMarkerInArray={updateMarkerInArray}
               deleteMarkerInArray={deleteMarkerInArray}
               key={index}
               marker={marker}
               isUpdating={isUpdating}
               updateIsUpdating={setIsUpdating}
-              fetchMarkers={fetchMarkers}
               currentPositionId={currentPositionId}
               updateCurrentPositionId={setCurrentPositionId}
               handleClick={handleMarkerClick}
@@ -118,8 +124,8 @@ const Mapbox = () => {
           ))}
           {localStorage.username && newPosition && (
             <NewMapMarker
+              socket={socket}
               addMarkerToArray={addMarkerToArray}
-              fetchMarkers={fetchMarkers}
               newPosition={newPosition}
               updateNewPosition={setNewPosition}
             />

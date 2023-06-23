@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import s from "./UpdateForm.module.scss";
 import updateMarker from "../../../services/updateMarker";
 import getNewTokens from "../../../services/getNewTokens";
+import { Socket } from "socket.io-client";
 
 interface IMapMarker {
   latitude: number;
@@ -15,6 +16,7 @@ interface IMapMarker {
   _id: string;
 }
 interface IUpdateFormProps {
+  socket: Socket,
   updateMarkerInArray: (value: IMapMarker) => void,
   updateIsUpdating: (value: boolean) => void,
   id: string;
@@ -23,7 +25,7 @@ interface IUpdateFormProps {
   initialRating: number;
 }
 
-const UpdateForm = ({ updateIsUpdating, updateMarkerInArray, id, initialTitle, initialDescription, initialRating}: IUpdateFormProps) => {
+const UpdateForm = ({ socket, updateIsUpdating, updateMarkerInArray, id, initialTitle, initialDescription, initialRating }: IUpdateFormProps) => {
   const [title, setTitle] = useState(initialTitle);
   const [description, setDescription] = useState(initialDescription);
   const [rating, setRating] = useState(initialRating);
@@ -45,6 +47,7 @@ const UpdateForm = ({ updateIsUpdating, updateMarkerInArray, id, initialTitle, i
     }
     let result: IMapMarker = await res.json();
     updateMarkerInArray(result);
+    socket.emit('update marker', result._id);
     updateIsUpdating(false);
   }
   return (

@@ -19,17 +19,17 @@ interface IMapMarker {
   _id: string;
 }
 interface INewMapMarkerProps {
+  socket: Socket,
   addMarkerToArray: (value: IMapMarker) => void
   newPosition: Position;
   updateNewPosition: (value: Position | null) => void;
-  fetchMarkers: () => Promise<void>;
 }
 
 const NewMapMarker = ({
+  socket,
   addMarkerToArray,
   newPosition,
   updateNewPosition,
-  fetchMarkers,
 }: INewMapMarkerProps) => {
   return (
     <>
@@ -45,9 +45,9 @@ const NewMapMarker = ({
         anchor="top"
       >
         <AddForm
+          socket={socket}
           addMarkerToArray={addMarkerToArray}
           newPosition={newPosition}
-          fetchMarkers={fetchMarkers}
           updateNewPosition={updateNewPosition}
         />
       </Popup>

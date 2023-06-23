@@ -20,13 +20,14 @@ interface Position {
   lat: number;
 }
 interface IAddFormProps {
+  socket: Socket
   addMarkerToArray: (value: IMapMarker) => void;
   newPosition: Position;
   updateNewPosition: (value: Position | null) => void;
-  fetchMarkers: () => Promise<void>;
 }
 
 const AddForm = ({
+  socket,
   addMarkerToArray,
   newPosition,
   updateNewPosition,
@@ -49,13 +50,12 @@ const AddForm = ({
     if (res.status === 403) {
       if (await getNewTokens()) {
         res = await addMarker(data);
-        let result: IMapMarker = await res.json();
-        addMarkerToArray(result);
       }
-      else alert("Error occured");
+      else return alert("Error occured");
     }
     let result: IMapMarker = await res.json();
     addMarkerToArray(result);
+    socket.emit('new marker', result._id)
     updateNewPosition(null);
     clearValues();
   }
