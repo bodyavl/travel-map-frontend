@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import s from "./Navbar.module.scss";
 import logout from "../../../services/logout";
-import { Value } from "sass";
 import { RotatingLines } from "react-loader-spinner";
 
 interface INavbarProps {

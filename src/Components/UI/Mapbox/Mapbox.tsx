@@ -37,30 +37,28 @@ const Mapbox = () => {
     null
   );
   const [newPosition, setNewPosition] = useState<Position | null>(null);
-  const [markers, setMarkers] = useState<IMapMarker[]>();
+  const [markers, setMarkers] = useState<any>();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  async function fetchMarkers() {
+  const fetchMarkers = async () => {
     setIsLoading(true);
-    let result: Array<IMapMarker> = await (await getMarkers()).json();
+    let result = await (await getMarkers()).json();
     if (result) setMarkers(result);
     setIsLoading(false);
-    
-    
   }
   function addMarkerToArray(value: IMapMarker) {
-    setMarkers([...(markers as []), value]);
+    setMarkers([...markers, value]);
   }
   function updateMarkerInArray(value: IMapMarker) {
     setMarkers([
-      ...(markers?.filter((marker) => marker._id !== value._id) as []),
+      ...markers?.filter((marker: IMapMarker) => marker._id !== value._id),
       value,
     ]);
   }
   function deleteMarkerInArray(id: string) {
-    setMarkers([...(markers?.filter((marker) => marker._id !== id) as [])]);
+    setMarkers([...markers?.filter((marker: IMapMarker) => marker._id !== id)]);
   }
 
   useEffect(() => {
@@ -68,10 +66,12 @@ const Mapbox = () => {
   }, []);
 
   useEffect(() => {
-    socket.on('fetch new', addMarkerToArray)
-    socket.on('fetch update', updateMarkerInArray)
-    socket.on('fetch delete', deleteMarkerInArray)
-  }, [socket])
+    if(markers) {
+      socket.on("fetch new", addMarkerToArray);
+      socket.on("fetch update", updateMarkerInArray);
+      socket.on("fetch delete", deleteMarkerInArray);
+    }
+  }, [markers]);
 
   function handleMarkerClick(
     e: MapboxEvent<MouseEvent>,
@@ -109,7 +109,7 @@ const Mapbox = () => {
           doubleClickZoom={false}
           mapStyle="mapbox://styles/mapbox/streets-v12"
         >
-          {markers?.map((marker, index) => (
+          {markers?.map((marker: IMapMarker, index: number) => (
             <MapMarker
               socket={socket}
               updateMarkerInArray={updateMarkerInArray}
