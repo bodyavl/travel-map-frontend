@@ -8,6 +8,7 @@ import MapMarker from "../MapMarker/MapMarker";
 import getMarkers from "../../../services/getMarkers";
 import NewMapMarker from "../NewMapMarker/NewMapMarker";
 import { io } from "socket.io-client";
+import { render } from "react-dom";
 const socket = io(import.meta.env.VITE_API_URL);
 
 interface IMapMarker {
@@ -44,6 +45,7 @@ const Mapbox = () => {
 
   const fetchMarkers = async () => {
     setIsLoading(true);
+    if(markers) setMarkers([]);
     let result = await (await getMarkers()).json();
     if (result) setMarkers(result);
     setIsLoading(false);
@@ -132,7 +134,7 @@ const Mapbox = () => {
             />
           )}
         </Map>
-        <Navbar isLoading={isLoading} updateIsLoading={setIsLoading} />
+        <Navbar fetchMarkers={fetchMarkers} isLoading={isLoading} updateIsLoading={setIsLoading} />
       </>
     </div>
   );

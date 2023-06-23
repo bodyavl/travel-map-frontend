@@ -5,10 +5,11 @@ import { RotatingLines } from "react-loader-spinner";
 
 interface INavbarProps {
     updateIsLoading: (value: boolean) => void
+    fetchMarkers: () => Promise<void>
     isLoading: boolean
 }
 
-const Navbar = ({updateIsLoading, isLoading}: INavbarProps) => {
+const Navbar = ({ fetchMarkers, updateIsLoading, isLoading}: INavbarProps) => {
 
   async function handleLogout() {
     updateIsLoading(true);
@@ -16,6 +17,7 @@ const Navbar = ({updateIsLoading, isLoading}: INavbarProps) => {
     localStorage.removeItem("username");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    await fetchMarkers();
     updateIsLoading(false);
   }
   return (
