@@ -7,10 +7,11 @@
     margin: 10px;
     gap: 10px;
     & .loaderContainer {
-        backdrop-filter: blur(4px);
         animation: opacityOn 1s normal forwards;
         padding: 8px;
         background-color: rgba($color: #FFFFFF, $alpha: 0.5);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
         border-radius: 10px;
         display: flex;
         align-items: center;
