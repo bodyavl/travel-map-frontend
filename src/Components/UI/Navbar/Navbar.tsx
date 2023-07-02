@@ -4,13 +4,13 @@ import logout from "../../../services/logout";
 import { RotatingLines } from "react-loader-spinner";
 
 interface INavbarProps {
-    updateIsLoading: (value: boolean) => void
-    fetchMarkers: () => Promise<void>
-    isLoading: boolean
+  markersCount: number;
+  updateIsLoading: (value: boolean) => void;
+  fetchMarkers: () => Promise<void>;
+  isLoading: boolean;
 }
 
-const Navbar = ({ fetchMarkers, updateIsLoading, isLoading}: INavbarProps) => {
-
+const Navbar = ({ markersCount, fetchMarkers, updateIsLoading, isLoading }: INavbarProps) => {
   async function handleLogout() {
     updateIsLoading(true);
     await logout();
@@ -22,25 +22,28 @@ const Navbar = ({ fetchMarkers, updateIsLoading, isLoading}: INavbarProps) => {
   }
   return (
     <div className={s.navbar}>
-      {isLoading && (
+      <div className={s.left}>Total Number of markers: {markersCount || 0}</div>
+      <div className={s.right}>
+        {isLoading && (
           <div className={s.loaderContainer}>
             <RotatingLines strokeColor="black" width="20" />
           </div>
         )}
-      {localStorage.username ? (
-        <button className={s.loginButton} onClick={handleLogout}>
-          Log out
-        </button>
-      ) : (
-        <>
-          <Link className={s.loginButton} to={"/login"}>
-            Log in
-          </Link>
-          <Link className={s.signupButton} to={"/signup"}>
-            Sign up
-          </Link>
-        </>
-      )}
+        {localStorage.username ? (
+          <button className={s.loginButton} onClick={handleLogout}>
+            Log out
+          </button>
+        ) : (
+          <>
+            <Link className={s.loginButton} to={"/login"}>
+              Log in
+            </Link>
+            <Link className={s.signupButton} to={"/signup"}>
+              Sign up
+            </Link>
+          </>
+        )}
+      </div>
     </div>
   );
 };

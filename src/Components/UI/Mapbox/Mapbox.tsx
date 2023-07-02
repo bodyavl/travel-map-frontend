@@ -38,7 +38,7 @@ const Mapbox = () => {
     null
   );
   const [newPosition, setNewPosition] = useState<Position | null>(null);
-  const [markers, setMarkers] = useState<any>();
+  const [markers, setMarkers] = useState<IMapMarker[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -134,7 +134,7 @@ const Mapbox = () => {
             />
           )}
         </Map>
-        <Navbar fetchMarkers={fetchMarkers} isLoading={isLoading} updateIsLoading={setIsLoading} />
+        <Navbar markersCount={markers.length} fetchMarkers={fetchMarkers} isLoading={isLoading} updateIsLoading={setIsLoading} />
       </>
     </div>
   );

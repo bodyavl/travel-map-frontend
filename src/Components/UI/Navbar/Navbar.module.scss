@@ -1,48 +1,61 @@
 .navbar {
-    position: fixed;
-    top: 0;
-    right: 0;
+  position: fixed;
+  width: 98%;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 1%;
+  & .left {
+    display: flex;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgba($color: #ffffff, $alpha: 0.5);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+  }
+  & .right {
     display: flex;
     align-items: center;
-    margin: 10px;
     gap: 10px;
-    & .loaderContainer {
-        animation: opacityOn 1s normal forwards;
-        padding: 8px;
-        background-color: rgba($color: #FFFFFF, $alpha: 0.5);
-        backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px);
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+  }
+  & .loaderContainer {
+    animation: opacityOn 1s normal forwards;
+    padding: 8px;
+    background-color: rgba($color: #ffffff, $alpha: 0.5);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  @keyframes opacityOn {
+    0% {
+      opacity: 0;
     }
-    @keyframes opacityOn {
-        0% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-        }
+    100% {
+      opacity: 1;
     }
-    & .loginButton {
-        font-family: 'Inter', sans-serif;
-        font-size: 16px;
-        line-height: 24px;
-        border-radius: 7px;
-        padding: 0.4em 1em;
-        border: none;
-        background-color: rgb(230, 144, 82);
-        color: white;
-        text-decoration: none;
-    }
-    & .signupButton {
-        font-family: 'Inter', sans-serif;
-        border-radius: 7px;
-        padding: 0.4em 1em;
-        border: none;
-        background-color: rgb(82, 112, 230);
-        color: white;
-        text-decoration: none;
-    }
+  }
+  & .loginButton {
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    border-radius: 7px;
+    padding: 0.4em 1em;
+    border: none;
+    background-color: rgb(230, 144, 82);
+    color: white;
+    text-decoration: none;
+  }
+  & .signupButton {
+    font-family: "Inter", sans-serif;
+    border-radius: 7px;
+    padding: 0.4em 1em;
+    border: none;
+    background-color: rgb(82, 112, 230);
+    color: white;
+    text-decoration: none;
+  }
 }
