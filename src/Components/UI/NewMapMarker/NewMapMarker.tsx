@@ -1,4 +1,3 @@
-import React from "react";
 import { Marker, Popup } from "react-map-gl";
 import AddForm from "../AddForm/AddForm";
 import { Socket } from "socket.io-client";

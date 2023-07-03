@@ -1,9 +1,9 @@
-import React from 'react'
+import { ReactNode } from 'react'
 import s from './ButtonPopup.module.scss'
 
 interface IButtonPopupProps {
     handleClick: () => void | Promise<void> ,
-    children: React.ReactNode
+    children: ReactNode
 }
 const ButtonPopup = ({handleClick, children}: IButtonPopupProps) => {
   return (

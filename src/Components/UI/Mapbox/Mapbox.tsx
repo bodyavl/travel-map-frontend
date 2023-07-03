@@ -1,5 +1,5 @@
 import { MapMouseEvent } from "mapbox-gl";
-import Map, { MapRef, Marker, Popup, MapboxEvent } from "react-map-gl";
+import Map, { MapRef, MapboxEvent } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useState, useEffect, useRef } from "react";
 import s from "./Mapbox.module.scss";
@@ -8,7 +8,6 @@ import MapMarker from "../MapMarker/MapMarker";
 import getMarkers from "../../../services/getMarkers";
 import NewMapMarker from "../NewMapMarker/NewMapMarker";
 import { io } from "socket.io-client";
-import { render } from "react-dom";
 const socket = io(import.meta.env.VITE_API_URL);
 
 interface IMapMarker {
