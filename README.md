@@ -13,5 +13,5 @@ And also, markers are being updated in the real time, so if someone else would b
 - You need to have [Node.js](https://nodejs.org/en) and [Git](https://git-scm.com/downloads) installed.
 - Clone this repo by running `git clone https://github.com/bodyavl/travel-map-frontend.git`
 - Run `npm i` command to install all necessary packages.
-- Create .env file and provide environment variables described in .env-example.
+- Create .env file and provide environment variables described in [.env-example](.env-example).
 - Run `npm run dev`
