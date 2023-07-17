@@ -1,11 +1,9 @@
 import s from './Login.module.scss'
 import { FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-interface Props {
-    apiUrl: string
-}
+import { login } from '../../services';
 
-const Login = ({apiUrl}: Props) => {
+const Login = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -14,14 +12,7 @@ const Login = ({apiUrl}: Props) => {
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         setIsLoading(true);
         e.preventDefault();
-        const body = JSON.stringify({ email, password })
-        let res = await fetch(`${apiUrl}/user/login`,
-            { method: 'post',
-            body,
-            headers : { 
-            'Content-Type': 'application/json'
-            }
-        });
+        let res = await login(email, password)
         if(res.status === 500) {
             alert("User with this email doesn't exist!")
             setIsLoading(false);

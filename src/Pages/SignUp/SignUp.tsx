@@ -1,12 +1,9 @@
 import s from './SignUp.module.scss'
 import {useState, FormEvent} from 'react'
 import { useNavigate } from 'react-router-dom'
+import { signup } from '../../services';
 
-interface Props {
-    apiUrl: string
-}
-
-const SignUp = ({apiUrl}: Props) => {
+const SignUp = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
@@ -17,13 +14,7 @@ const SignUp = ({apiUrl}: Props) => {
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         setIsLoading(true);
         e.preventDefault();
-        let res = await fetch(`${apiUrl}/user/signup`,
-            { method: 'post',
-            body: JSON.stringify({email, username, password}),
-            headers : { 
-            'Content-Type': 'application/json'
-            }
-        });
+        let res = await signup(email, password, username);
         if(res.status === 400) {
             alert("User with this username already exists!")
             setIsLoading(false);

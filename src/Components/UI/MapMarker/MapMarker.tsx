@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { MapboxEvent, Marker, Popup } from "react-map-gl";
 import UpdateForm from "../UpdateForm/UpdateForm";
 import MarkerInfo from "../MarkerInfo/MarkerInfo";

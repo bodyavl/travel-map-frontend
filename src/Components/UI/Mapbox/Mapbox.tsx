@@ -5,9 +5,9 @@ import { useState, useEffect, useRef } from "react";
 import s from "./Mapbox.module.scss";
 import Navbar from "../Navbar/Navbar";
 import MapMarker from "../MapMarker/MapMarker";
-import getMarkers from "../../../services/getMarkers";
 import NewMapMarker from "../NewMapMarker/NewMapMarker";
 import { io } from "socket.io-client";
+import { getMarkers } from "../../../services";
 const socket = io(import.meta.env.VITE_API_URL);
 
 interface IMapMarker {

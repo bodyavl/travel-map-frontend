@@ -2,9 +2,9 @@ import s from './MarkerInfo.module.scss'
 import { AiFillStar } from "react-icons/ai";
 import { format } from "timeago.js";
 import ButtonPopup from '../ButtonPopup/ButtonPopup';
-import deleteMarker from '../../../services/deleteMarker';
-import getNewTokens from '../../../services/getNewTokens';
+
 import { Socket } from 'socket.io-client';
+import { deleteMarker, getNewTokens } from '../../../services';
 
 interface IMapMarker {
   latitude: number;

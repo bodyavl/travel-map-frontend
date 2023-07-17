@@ -1,8 +1,7 @@
 import { FormEvent, useState } from "react";
 import s from "./AddForm.module.scss";
-import addMarker from "../../../services/addMarker";
-import getNewTokens from "../../../services/getNewTokens";
 import { Socket } from "socket.io-client";
+import { addMarker, getNewTokens } from "../../../services";
 
 interface IMapMarker {
   latitude: number;
