@@ -1,10 +1,7 @@
 import s from './ForgotPassword.module.scss'
 import React, { FormEvent, useState } from 'react'
-interface Props {
-    apiUrl: string
-}
 
-const ForgotPassword = ({apiUrl}:Props) => {
+const ForgotPassword = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');

@@ -5,14 +5,13 @@ import SignUp from "../../Pages/SignUp/SignUp"
 import ForgotPassword from "../../Pages/ForgotPassword/ForgotPassword"
 
 const Router = () => {
-  const apiUrl = 'https://travel-map-api.onrender.com'
   return (
     <BrowserRouter>
         <Routes>
-            <Route index element={<Map apiUrl={apiUrl}/>}/>
-            <Route path="login" element={<Login apiUrl={apiUrl}/>}/>
-            <Route path="signup" element={<SignUp apiUrl={apiUrl}/>}/>
-            <Route path="forgotPassword" element={<ForgotPassword apiUrl={apiUrl}/>}></Route>
+            <Route index element={<Map />}/>
+            <Route path="login" element={<Login />}/>
+            <Route path="signup" element={<SignUp />}/>
+            <Route path="forgotPassword" element={<ForgotPassword />}></Route>
         </Routes>
     </BrowserRouter>
   )
